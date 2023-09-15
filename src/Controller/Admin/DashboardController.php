@@ -31,7 +31,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Mon blog');
-            
+
     }
 
     public function configureMenuItems(): iterable
@@ -42,8 +42,9 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Tous les articles','fas fa-newspaper',Article::class),
             MenuItem::linkToCrud('Ajouter','fas fa-plus',Article::class)->setAction(Crud::PAGE_NEW),
             MenuItem::linkToCrud('Catégories','fas fa-list',Category::class),
-            MenuItem::linkToCrud('Commentaire','',Comment::class),
+            
         ]);
+        yield MenuItem::linkToCrud('Commentaire','fas fa-comment',Comment::class);
 
     }
 }
