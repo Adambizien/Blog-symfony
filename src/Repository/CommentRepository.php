@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Article;
+use App\Entity\Category;
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,29 +22,19 @@ class CommentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Comment::class);
     }
+    public function findForPagination(?Article $article = null)
+    {   
+        $qb = $this->createQueryBuilder('c')
+            ->orderBy('c.createdAt','DESC');
 
-//    /**
-//     * @return Comment[] Returns an array of Comment objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        if($article){
+            $qb->leftJoin('c.article','a')
+            ->where($qb->expr()->eq('a.id',':articleId'))
+            ->setParameter('articleId',$article->getId());
+        }
 
-//    public function findOneBySomeField($value): ?Comment
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $qb->getQuery();
+    }
+
+
 }
