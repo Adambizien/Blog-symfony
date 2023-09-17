@@ -1,5 +1,5 @@
-{%set menus = menu_service.findAll %}
-{% dump(menus) %}
+{% set menus = menu_service.findAll %}
+{% set options = option_service.findAll %}
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,7 +21,7 @@
             <div class="container d-flex flex-wrap">
                 <div class="dropdown">
                     <a class="nav nav-link dropdown-toggle text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Mon Blog
+                        {{options['blog_title']}}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonAdminDashBoard">
                         <li><a class="dropdown-item" href="{{path('admin')}}">Tableau de bord</a></li>
@@ -45,7 +45,7 @@
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
                 <a class ="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none" href="{{ path('app_home') }}">
-                    <span class ="fs-4">Mon Blog</span>
+                    <span class ="fs-4"> {{options['blog_title']}}</span>
                 </a>
 
                 <ul class="nav nav-pills">
@@ -69,12 +69,15 @@
                             </li>
                         {% endif %}
                     {% endfor %}
-                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <li class="nav-item">
-                        <a class="nav-link text-dark"  href="{{path('app_register')}}">
-                            S'inscrire
-                        </a>
-                    </li>
+                    {% dump(options['users_can_register'])%}
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY')  %}
+                        {% if '1' == options['users_can_register'] %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"  href="{{path('app_register')}}">
+                                    S'inscrire
+                                </a>
+                            </li>
+                        {% endif %}
                      <li class="nav-item">
                         <a class="nav-link text-dark" href="{{path('app_login')}}">
                             Se connecter
@@ -105,7 +108,7 @@
         <div class="container">
             <footer class ="d-flex flex-warp justify-content-between align-items-center py-3 my-4 border-top">
                 <div class="col-mb-4 d-flex align-items-center">
-                    <span class="copyright">© {{'now' | date('Y')}} Adam Production.</span>
+                    <span class="copyright">© {{'now' | date('Y')}}  {{options['blog_copyright']}}</span>
                 </div>
             </footer>
         </div>

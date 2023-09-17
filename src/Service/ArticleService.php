@@ -13,6 +13,7 @@ class ArticleService
         private RequestStack $requestStack,
         private ArticleRepository $articleRepo,
         private PaginatorInterface $paginator,
+        private OptionService $optionService
     )
     {
         
@@ -21,7 +22,7 @@ class ArticleService
     public function getPaginatedArticles(?Category $category = null){
         $request = $this->requestStack->getMainRequest();
         $page = $request->query->getInt('page',1);
-        $limit = 1 ;
+        $limit =  $this->optionService->getValue('blog_articles_limit');
 
         $articlesQuery = $this->articleRepo->findForPagination($category);
         return $this->paginator->paginate($articlesQuery,$page,$limit);
